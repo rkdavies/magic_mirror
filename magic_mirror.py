@@ -229,8 +229,16 @@ IMPORTANT: Do NOT mention voice names, speakers, or tones. Never refer to 'zac',
                 active = False
                 break
 
+            """When testing is over all commands to be diverted through here"""
             if "mirror mirror" in user_input:
                 user_input = user_input.replace("mirror mirror", "").strip()
+                """
+                response = self.ask_ollama(user_input)
+                    if response:
+                        self.speak(response)
+                    else:
+                        print("No response from Ollama")
+                """
 
             if any(
                 word in user_input
