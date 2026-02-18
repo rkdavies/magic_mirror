@@ -8,7 +8,6 @@
 
 * **Voice Interaction:** Fully hands-free operation using Google Speech Recognition.
 * **Computer Vision:** Captures real-time images via your webcam to "see" who is standing before it.
-* **Multi-Model Intelligence:**
 * **Visual Analysis:** Uses `qwen3-vl:2b` to analyze physical appearance and provide compliments.
 * **Conversational Logic:** Uses `llama3` to handle general questions and maintain context.
 
