@@ -1,6 +1,6 @@
 # Magic Mirror AI 
 
-**Magic Mirror** is an AI-powered interactive assistant that combines computer vision, voice recognition, and natural language processing to act as a sentient, "magical" mirror. It uses a local Ollama instance for visual and textual reasoning and the Orpheus-FastAPI (ZAC voice) for high-quality text-to-speech output.
+**Magic Mirror** is an AI-powered interactive assistant that combines computer vision, voice recognition, and natural language processing to act as a sentient, "magical" mirror. It uses a local Ollama instance for visual and textual reasoning and the [Orpheus-FastAPI](https://github.com/Lex-au/Orpheus-FastAPI) ([ZAC voice](https://github.com/Lex-au/Orpheus-FastAPI/blob/main/docs/ZacContemplative.mp3)) for high-quality text-to-speech output.
 
 ---
 
