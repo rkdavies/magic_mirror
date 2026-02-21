@@ -1,6 +1,6 @@
 # Magic Mirror - AI Voice Assistant with Computer Vision
 
-A hands-free, voice-activated AI assistant that responds with expressive text-to-speech. Built with Python, it integrates computer vision, speech recognition, and large language models to create an interactive "smart mirror" experience.
+A hands-free, voice-activated AI assistant that responds with expressive neural text-to-speech. Built with Python, it integrates computer vision, speech recognition, and local large language models to create an interactive smart mirror experience.
 
 ## Overview
 
@@ -102,7 +102,7 @@ magic-mirror/
 
 ## Code Highlights
 
-### Voice Input with Noise Handling
+### Voice Input with Ambient Noise Handling
 ```python
 def listen_for_speech(self, timeout=5, phrase_time_limit=10):
     with sr.Microphone() as source:
@@ -111,7 +111,7 @@ def listen_for_speech(self, timeout=5, phrase_time_limit=10):
     return self.recognizer.recognize_google(audio)
 ```
 
-### Vision Model Integration
+### Vision Model Integration with Base64 Encoding
 ```python
 def analyze_image(self, image_path, prompt=None):
     image_data = base64.b64encode(f.read()).decode("utf-8")
@@ -120,7 +120,7 @@ def analyze_image(self, image_path, prompt=None):
     return response.json().get("response")
 ```
 
-### Expressive Text-to-Speech
+### Expressive Neural Text-to-Speech
 ```python
 def speak(self, text):
     payload = {"model": "orpheus", "input": text, "voice": "zac", "response_format": "wav"}
@@ -129,19 +129,21 @@ def speak(self, text):
     play_audio(audio)
 ```
 
-## Challenges Solved
+## Technical Challenges Solved
 
-- **Consistent Voice Output**: Stripped voice name references from AI responses to prevent model hallucination
-- **Camera Privacy**: Camera only activates on explicit voice command, then releases immediately
+- **Consistent Voice Output**: Stripped voice name references from AI responses to prevent model hallucination from switching voices mid-response
+- **Camera Privacy**: Camera only activates on explicit voice command, then releases immediately to prevent persistent camera usage
 - **Natural Responses**: Configured AI to avoid emojis, asterisks, and filler text for cleaner TTS output
-- **Timeout Handling**: Implemented retry logic for TTS requests with extended timeouts
+- **Timeout Handling**: Implemented retry logic for TTS requests with extended timeouts for slower model loading
+- **Multi-Model Orchestration**: Coordinated separate vision and chat models with distinct system prompts for consistent personality
 
 ## Future Enhancements
 
-- Multi-user face recognition
+- Multi-user face recognition for personalized responses
 - Integration with smart home devices
-- Custom voice selection
+- Custom voice selection option
 - Expanded visual analysis capabilities
+- Web dashboard for configuration
 
 ## License
 
