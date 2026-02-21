@@ -150,5 +150,5 @@ def speak(self, text):
 MIT License
 
 ## Author
-
+Robert Kris Davies
 Built as a personal project exploring voice AI, computer vision, and local LLM integration.
