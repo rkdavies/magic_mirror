@@ -1,102 +1,152 @@
-# Magic Mirror AI 
+# Magic Mirror - AI Voice Assistant with Computer Vision
 
-**Magic Mirror** is an AI-powered interactive assistant that combines computer vision, voice recognition, and natural language processing to act as a sentient, "magical" mirror. It uses a local Ollama instance for visual and textual reasoning and the Orpheus-FastAPI (ZAC voice) for high-quality text-to-speech output.
+A hands-free, voice-activated AI assistant that responds with expressive text-to-speech. Built with Python, it integrates computer vision, speech recognition, and large language models to create an interactive "smart mirror" experience.
 
----
+## Overview
 
-## Features
+Magic Mirror is a voice-controlled AI assistant that:
+- Listens for voice commands and responds with natural speech
+- Uses computer vision to analyze faces and provide personalized feedback
+- Maintains conversational context across interactions
+- Delivers responses through high-quality neural text-to-speech
 
-* **Voice Interaction:** Fully hands-free operation using Google Speech Recognition.
-* **Computer Vision:** Captures real-time images via your webcam to "see" who is standing before it.
-* **Multi-Model Intelligence:**
-* **Visual Analysis:** Uses `qwen3-vl:2b` to analyze physical appearance and provide compliments.
-* **Conversational Logic:** Uses `llama3` to handle general questions and maintain context.
+## Technical Stack
 
+| Component | Technology |
+|-----------|------------|
+| **Language** | Python 3 |
+| **Speech Recognition** | Google Speech API (SpeechRecognition) |
+| **Computer Vision** | OpenCV (cv2) |
+| **LLM / Vision** | Ollama (qwen3-vl:2b, llama3) |
+| **Text-to-Speech** | Orpheus-FastAPI (ZAC voice) |
+| **Audio Playback** | Pydub |
 
-* **Expressive TTS:** Integrates with Orpheus-FastAPI using the **ZAC** voice, supporting emotional tags like `<laugh>`, `<sigh>`, and `<gasp>`.
-* **Personality-Driven:** Configured to be wise, caring, and occasionally witty—true to the fairy tale aesthetic.
+## Key Features
 
----
+- **Voice-First Interaction**: Completely hands-free operation using speech recognition
+- **Computer Vision**: On-demand camera activation for face analysis
+- **Multi-Model Architecture**: Separate models for visual analysis and conversational AI
+- **Natural Speech Output**: Expressive TTS with emotional tags (laughter, sighs, etc.)
+- **Character Consistency**: Configurable AI personality with strict output formatting rules
 
 ## Architecture
 
-### System Components
-
-| Component | Technology | Role |
-| --- | --- | --- |
-| **Vision** | OpenCV (CV2) | Captures frames from the system camera. |
-| **Brain** | Ollama (`qwen3-vl` & `llama3`) | Processes images and generates text responses. |
-| **Voice In** | SpeechRecognition | Converts user speech to text via Google API. |
-| **Voice Out** | Orpheus-FastAPI (ZAC) | Converts AI text to expressive WAV audio. |
-| **Audio Playback** | Pydub | Handles the playback of generated speech. |
-
----
-
-## Getting Started
-
-### Prerequisites
-
-1. **Ollama Server:** Ensure Ollama is running on your network (Default IP: `192.168.1.151`).
-* Pull models: `ollama pull llama3` and `ollama pull qwen3-vl:2b`.
-
-
-2. **Orpheus-FastAPI:** A running instance of the Orpheus TTS server at `192.168.1.151:5005` with the `zac` voice installed.
-3. **Python 3.x Environment.**
-
-### Installation
-
-```bash
-# Install system dependencies (macOS)
-brew install ffmpeg
-
-# Install Python dependencies
-pip install opencv-python requests SpeechRecognition pydub
-
+```
+User Voice Input → SpeechRecognition → Ollama (llama3) → Orpheus-FastAPI → Audio Output
+                       ↓
+                  Camera Capture → Ollama (qwen3-vl:2b) → Response
 ```
 
-### Configuration
+## Installation
 
-Modify the `MagicMirror` class initialization in the script if your server IPs differ:
+```bash
+# Clone the repository
+git clone <repository-url>
+cd magic-mirror
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+# or
+.venv\Scripts\activate  # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install system dependencies (macOS)
+brew install ffmpeg
+```
+
+## Configuration
+
+Edit `magic_mirror.py` to configure your server URLs:
 
 ```python
 mirror = MagicMirror(
-    ollama_url="http://YOUR_IP:11434",
-    orpheus_url="http://YOUR_IP:5005"
+    ollama_url="http://YOUR_OLLAMA_IP:11434",
+    orpheus_url="http://YOUR_ORPHEUS_IP:5005"
 )
-
 ```
 
----
+## Required Services
 
-## Interaction Guide
+1. **Ollama Server** (port 11434)
+   - Model: `llama3` for conversational AI
+   - Model: `qwen3-vl:2b` for visual analysis
 
-### How to Use
+2. **Orpheus-FastAPI** (port 5005)
+   - Model: `legraphista/orpheus:latest`
+   - Voice: ZAC
 
-1. **Run the script:** `python magic_mirror.py`
-2. **Wait for the Greeting:** The mirror will introduce itself once the connection is established.
-3. **Trigger Phrases:** The mirror listens for specific keywords to trigger the camera:
-* *"Mirror, mirror, how do I look today?"*
-* *"What do you think of me?"*
-* *"Look at me."*
+## Usage
 
+```bash
+python magic_mirror.py
+```
 
-4. **Natural Conversation:** Ask anything else to engage the general LLM.
-5. **Termination:** Say *"Goodbye"*, *"Exit"*, or *"Stop"* to close the program.
+### Voice Commands
 
-### Emotional Tags
+- **General conversation**: Ask any question
+- **Visual analysis**: "How do I look today?", "What do you think of me?", "Look at me"
+- **Exit**: Say "Goodbye", "Exit", or "Stop"
 
-The mirror uses internal tags to express human-like sounds through the Orpheus engine:
+## Project Structure
 
-* `<laugh>` / `<chuckle>`
-* `<sigh>` / `<gasp>`
-* `<sniffle>` / `<yawn>`
+```
+magic-mirror/
+├── magic_mirror.py       # Main application
+├── requirements.txt      # Python dependencies
+├── README.md            # This file
+└── capture_*.jpg        # Captured images (runtime)
+```
 
----
+## Code Highlights
 
-## System Personality Rules
+### Voice Input with Noise Handling
+```python
+def listen_for_speech(self, timeout=5, phrase_time_limit=10):
+    with sr.Microphone() as source:
+        self.recognizer.adjust_for_ambient_noise(source, duration=1)
+        audio = self.recognizer.listen(source, timeout=timeout, phrase_time_limit=phrase_time_limit)
+    return self.recognizer.recognize_google(audio)
+```
 
-The mirror is governed by a strict system prompt to maintain its character:
+### Vision Model Integration
+```python
+def analyze_image(self, image_path, prompt=None):
+    image_data = base64.b64encode(f.read()).decode("utf-8")
+    payload = {"model": "qwen3-vl:2b", "prompt": prompt, "images": [image_data]}
+    response = requests.post(f"{self.ollama_url}/api/generate", json=payload)
+    return response.json().get("response")
+```
 
-* **No Emojis:** Strictly prohibited to keep the "magical" feel.
-* **Plain Text Only:** No bolding, italics, or asterisks (to prevent the TTS from reading formatting symbols).
-* **Character Consistency:** Always speaks as a wise, evocative entity from a fairy tale.
+### Expressive Text-to-Speech
+```python
+def speak(self, text):
+    payload = {"model": "orpheus", "input": text, "voice": "zac", "response_format": "wav"}
+    response = requests.post(f"{self.orpheus_url}/v1/audio/speech", json=payload)
+    audio = AudioSegment.from_wav(io.BytesIO(response.content))
+    play_audio(audio)
+```
+
+## Challenges Solved
+
+- **Consistent Voice Output**: Stripped voice name references from AI responses to prevent model hallucination
+- **Camera Privacy**: Camera only activates on explicit voice command, then releases immediately
+- **Natural Responses**: Configured AI to avoid emojis, asterisks, and filler text for cleaner TTS output
+- **Timeout Handling**: Implemented retry logic for TTS requests with extended timeouts
+
+## Future Enhancements
+
+- Multi-user face recognition
+- Integration with smart home devices
+- Custom voice selection
+- Expanded visual analysis capabilities
+
+## License
+
+MIT License
+
+## Author
+
+Built as a personal project exploring voice AI, computer vision, and local LLM integration.
