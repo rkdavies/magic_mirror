@@ -1,0 +1,37 @@
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:ro
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+    restart: unless-stopped
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:rw
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+    environment:
+      - DEFAULT_EMAIL=rkdavies@hackshack.sh
+    depends_on:
+      - nginx-proxy
+    restart: unless-stopped
+
+  web:
+    image: nginx:latest
+    volumes:
+      - /home/phantasm/hackshack_web/web_root:/usr/share/nginx/html:ro
+    environment:
+      - VIRTUAL_HOST=www.hackshack.sh
+      - LETSENCRYPT_HOST=www.hackshack.sh
+      - LETSENCRYPT_EMAIL=rkdavies@hackshack.sh
+    depends_on:
+      - nginx-proxy
+    restart: unless-stopped
