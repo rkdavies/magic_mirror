@@ -1,0 +1,156 @@
+# AgenticPlatform Configuration
+
+## Agent Configurations
+
+### orchestrator
+name: "Orchestrator"
+model: "qwen2.5:32b"
+temperature: 0.7
+max_tokens: 4096
+system_prompt: |
+  You are the Orchestrator Agent for AgenticPlatform. Your role is to:
+  1. Analyze incoming tasks and determine the best agent for each subtask
+  2. Coordinate sequential workflows across multiple agents
+  3. Aggregate results from different agents and synthesize responses
+  4. Handle error cases and implement retry logic
+  5. Maintain context across multi-step tasks
+
+  When a task requires multiple skills, delegate to appropriate agents and combine their outputs.
+
+### coding_agent
+name: "Coding Agent"
+model: "qwen2.5-coder:32b"
+temperature: 0.3
+max_tokens: 4096
+system_prompt: |
+  You are the Coding Agent for AgenticPlatform. Your role is to:
+  1. Generate high-quality code based on requirements
+  2. Review code for bugs, security issues, and best practices
+  3. Debug and fix existing code
+  4. Execute terminal commands safely
+  5. Use Git for version control operations
+
+  Always write clean, documented, and maintainable code.
+tools:
+  - filesystem_read
+  - filesystem_write
+  - terminal_execute
+  - github_operations
+
+### research_agent
+name: "Research Agent"
+model: "llama3.1:70b"
+temperature: 0.5
+max_tokens: 8192
+system_prompt: |
+  You are the Research Agent for AgenticPlatform. Your role is to:
+  1. Search the web for relevant information
+  2. Analyze and summarize documents
+  3. Synthesize findings from multiple sources
+  4. Provide comprehensive research reports
+
+  Always cite sources and verify information accuracy.
+tools:
+  - brave_search
+  - document_rag
+  - url_fetch
+
+### marketing_agent
+name: "Marketing Agent"
+model: "qwen2.5:32b"
+temperature: 0.8
+max_tokens: 2048
+system_prompt: |
+  You are the Marketing Agent for AgenticPlatform. Your role is to:
+  1. Create engaging marketing copy
+  2. Generate social media content
+  3. Assist with campaign planning
+  4. Write professional emails
+
+  Focus on the Hackshack Labs brand voice: innovative, technical, community-focused.
+tools:
+  - content_generation
+  - social_media
+
+## Inference Configuration
+
+### llama_server
+host: "0.0.0.0"
+port: 8080
+context_size: 4096
+gpu_layers: 99
+threads: 16
+batch_size: 512
+
+### models
+models_dir: "./models"
+
+model_list:
+  - name: "qwen2.5:32b"
+    filename: "qwen2.5-32b-q4_k_m.gguf"
+    vram_requirement: "20GB"
+    quantization: "Q4_K_M"
+    
+  - name: "qwen2.5-coder:32b"
+    filename: "qwen2.5-coder-32b-q4_k_m.gguf"
+    vram_requirement: "20GB"
+    quantization: "Q4_K_M"
+    
+  - name: "llama3.1:70b"
+    filename: "llama3.1-70b-q4_k_m.gguf"
+    vram_requirement: "42GB"
+    quantization: "Q4_K_M"
+    
+  - name: "deepseek-r1:70b"
+    filename: "deepseek-r1-70b-q4_k_m.gguf"
+    vram_requirement: "42GB"
+    quantization: "Q4_K_M"
+
+## MCP Servers
+
+### enabled_servers
+- filesystem
+- github
+- brave_search
+- sqlite
+
+### server_configs
+filesystem:
+  command: "npx"
+  args: ["-y", "@modelcontextprotocol/server-filesystem", "/workspace"]
+  working_directory: "/workspace"
+
+github:
+  command: "npx"
+  args: ["-y", "@modelcontextprotocol/server-github"]
+  env:
+    - GITHUB_TOKEN
+
+brave_search:
+  command: "npx"
+  args: ["-y", "@modelcontextprotocol/server-brave-search"]
+  env:
+    - BRAVE_API_KEY
+
+sqlite:
+  command: "npx"
+  args: ["-y", "@modelcontextprotocol/server-sqlite", "/data/agentic.db"]
+
+## Workflow Configuration
+
+### sequential_tasks
+max_steps: 10
+timeout_seconds: 300
+retry_attempts: 3
+
+### autonomous_mode
+self_correction: true
+max_iterations: 5
+reflection_enabled: true
+
+## Logging
+
+level: "INFO"
+log_file: "./logs/agentic-platform.log"
+max_log_size_mb: 100
+log_rotation_count: 5
