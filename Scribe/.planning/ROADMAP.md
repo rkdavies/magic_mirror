@@ -30,7 +30,7 @@ Ship a **browser-first** event photo booth: secure **capture and export** first,
 4. Guest can **retake** after review instead of being forced forward.
 5. Guest always gets a **saved file** (download); if **Share** exists and works, it is offered without removing download.
 
-**Plans:** TBD
+**Plans:** 4 (see `.planning/phases/01-foundation-capture-spine/*-PLAN.md`)
 
 Plans:
 
@@ -134,7 +134,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & capture spine | 0/TBD | Not started | - |
+| 1. Foundation & capture spine | 0/4 | Planned | - |
 | 2. Themes & compositing | 0/TBD | Not started | - |
 | 3. Generative + theme binding | 0/TBD | Not started | - |
 | 4. Wait experience & effects | 0/TBD | Not started | - |

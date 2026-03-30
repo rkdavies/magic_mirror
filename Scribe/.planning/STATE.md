@@ -12,11 +12,11 @@
 
 Phase: **1** of **5** (Foundation & capture spine)
 
-Plan: **0** of TBD in current phase
+Plan: **0** of **4** in current phase (executable plans in `.planning/phases/01-foundation-capture-spine/`)
 
-Status: **Ready to plan** (Phase 1 not started)
+Status: **Planned** — ready for `/gsd-execute-phase 1`
 
-Last activity: **2026-03-30** — Roadmap and requirements initialized from seeds + research.
+Last activity: **2026-03-30** — Phase 1 planned (`01-01`–`01-04` PLAN.md + `01-RESEARCH.md`).
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -58,6 +58,6 @@ None yet.
 
 Last session: 2026-03-30
 
-Stopped at: Planning artifacts written (`REQUIREMENTS.md`, `.planning/ROADMAP.md`, `.planning/STATE.md`).
+Stopped at: Phase 1 plan-phase complete — execute `01-01` first (Vite scaffold + manifest).
 
 Resume file: None
